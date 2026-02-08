@@ -11,6 +11,7 @@ services:
 
   chrome:
     image: selenium/node-chrome:4.18.1
+    container_name: chrome-node
     shm_size: 2gb
     depends_on:
       - selenium-hub
@@ -24,6 +25,7 @@ services:
 
   firefox:
     image: selenium/node-firefox:4.18.1
+    container_name: firefox-node
     shm_size: 2gb
     depends_on:
       - selenium-hub
@@ -35,29 +37,30 @@ services:
       - selenium-grid
 
   chrome-video:
-    image: selenium/video:latest
+    image: selenium/video:ffmpeg-4.3.1-20240207
+    container_name: chrome-video
     depends_on:
       - chrome
     volumes:
       - ./videos:/videos
     environment:
-      - DISPLAY_CONTAINER_NAME=chrome
+      - DISPLAY_CONTAINER_NAME=chrome-node
       - FILE_NAME=chrome-session.mp4
     networks:
       - selenium-grid
 
   firefox-video:
-    image: selenium/video:latest
+    image: selenium/video:ffmpeg-4.3.1-20240207
+    container_name: firefox-video
     depends_on:
       - firefox
     volumes:
       - ./videos:/videos
     environment:
-      - DISPLAY_CONTAINER_NAME=firefox
+      - DISPLAY_CONTAINER_NAME=firefox-node
       - FILE_NAME=firefox-session.mp4
     networks:
       - selenium-grid
-
 
 networks:
   selenium-grid:
