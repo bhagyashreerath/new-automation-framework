@@ -1,7 +1,6 @@
 services:
   selenium-hub:
-    image: selenium/hub:4.18.1
-    platform: linux/arm64
+    image: seleniarm/hub:4.18.1
     container_name: selenium-hub
     ports:
       - "4444:4444"
@@ -9,8 +8,7 @@ services:
       - selenium-grid
 
   chrome:
-    image: selenium/node-chrome:4.18.1
-    platform: linux/arm64
+    image: seleniarm/node-chromium:4.18.1
     shm_size: 2gb
     depends_on:
       - selenium-hub
@@ -23,8 +21,7 @@ services:
       - selenium-grid
 
   firefox:
-    image: selenium/node-firefox:4.18.1
-    platform: linux/arm64
+    image: seleniarm/node-firefox:4.18.1
     shm_size: 2gb
     depends_on:
       - selenium-hub
