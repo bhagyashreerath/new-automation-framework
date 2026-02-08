@@ -18,7 +18,7 @@ public class DriverFactory {
     // Create driver
     public static void initDriver(String browser) {
 
-        if(ConfigReader.getProperty("grid.enabled").equals("true")){
+        if(ConfigReader.getProperty("gridEnabled").equals("true")){
             ChromeOptions options = new ChromeOptions();
 
             if (browser.equalsIgnoreCase("chrome")) {
