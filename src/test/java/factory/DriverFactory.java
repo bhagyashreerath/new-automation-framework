@@ -5,7 +5,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import utils.ConfigReader;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class DriverFactory {
 
@@ -14,28 +18,42 @@ public class DriverFactory {
     // Create driver
     public static void initDriver(String browser) {
 
-        if(browser.equalsIgnoreCase("chrome")){
-
+        if(ConfigReader.getProperty("grid.enabled").equals("true")){
             ChromeOptions options = new ChromeOptions();
 
-            if(ConfigReader.initProperties()
-                    .getProperty("headless")
-                    .equalsIgnoreCase("true")) {
-
-                options.addArguments("--headless");
+            if (browser.equalsIgnoreCase("chrome")) {
+                try {
+                    driver.set(
+                            new RemoteWebDriver(
+                                    new URL("http://localhost:4444/wd/hub"),
+                                    options
+                            )
+                    );
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
             }
+        }else {
 
-            driver.set(new ChromeDriver(options));
-        }
+            if (browser.equalsIgnoreCase("chrome")) {
 
-        else if (browser.equalsIgnoreCase("firefox")) {
-            driver.set(new FirefoxDriver());
-        }
-        else if (browser.equalsIgnoreCase("edge")) {
-            driver.set(new EdgeDriver());
-        }
-        else {
-            throw new RuntimeException("Invalid browser: " + browser);
+                ChromeOptions options = new ChromeOptions();
+
+                if (ConfigReader.initProperties()
+                        .getProperty("headless")
+                        .equalsIgnoreCase("true")) {
+
+                    options.addArguments("--headless");
+                }
+
+                driver.set(new ChromeDriver(options));
+            } else if (browser.equalsIgnoreCase("firefox")) {
+                driver.set(new FirefoxDriver());
+            } else if (browser.equalsIgnoreCase("edge")) {
+                driver.set(new EdgeDriver());
+            } else {
+                throw new RuntimeException("Invalid browser: " + browser);
+            }
         }
 
         getDriver().manage().window().maximize();
