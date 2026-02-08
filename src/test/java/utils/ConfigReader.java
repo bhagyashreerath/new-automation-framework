@@ -23,4 +23,14 @@ public class ConfigReader {
 
         return prop;
     }
+    public static String getProperty(String key) {
+
+        if (prop == null) {
+            initProperties();
+        }
+
+        return prop.getProperty(key);
+    }
+
 }
+
